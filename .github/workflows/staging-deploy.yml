@@ -41,6 +41,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::296681679694:role/GitHubDeployCDKCrusade
+          aws-region: eu-west-2
 
       - name: Deploy to staging
         run: npm run deploy:staging
