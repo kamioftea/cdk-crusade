@@ -25,7 +25,7 @@ describe('End-to-end sign-up and login flow', () => {
         expect(await response.json()).toEqual({email: USER_EMAIL, name: USER_NAME});
 
         await verifyUser(USER_EMAIL);
-    });
+    }, 30_000)
 
     it('should log in a user', async () => {
         const url = await urlForPath('/auth/login');
@@ -39,5 +39,5 @@ describe('End-to-end sign-up and login flow', () => {
 
         expect(response.status).toBe(200);
         expect(await response.json()).toEqual({email: USER_EMAIL});
-    });
+    }, 30_000);
 });
