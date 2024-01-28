@@ -44,7 +44,7 @@ jobs:
           aws-region: eu-west-2
 
       - name: Deploy to staging
-        uses: kamioftea/npm-deploy-cdk-action@0.0.4
+        uses: kamioftea/npm-deploy-cdk-action@0.0.5
 
       - name: Test staging
         run: npm run test
