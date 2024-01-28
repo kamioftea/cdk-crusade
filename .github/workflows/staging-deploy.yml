@@ -27,10 +27,10 @@ jobs:
       contains(github.event.pull_request.labels.*.name, 'dependencies') == false
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -38,13 +38,13 @@ jobs:
         run: npm ci
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::296681679694:role/GitHubDeployCDKCrusade
           aws-region: eu-west-2
 
       - name: Deploy to staging
-        uses: kamioftea/npm-deploy-cdk-action@0.0.3
+        uses: kamioftea/npm-deploy-cdk-action@0.0.4
 
       - name: Test staging
         run: npm run test
