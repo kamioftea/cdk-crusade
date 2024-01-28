@@ -1,16 +1,25 @@
 import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import {HttpApi} from 'aws-cdk-lib/aws-apigatewayv2';
+import {Construct} from 'constructs';
+import {AuthNestedStack} from "./cognito-stack";
+
+const adminEmail = process.env.ADMIN_EMAIL ?? 'jeff@goblinoid.co.uk';
+const adminPassword = process.env.ADMIN_PASSWORD ?? 'changeme1234';
 
 export class CdkCrusadeStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    // The code that defines your stack goes here
+        let authStack = new AuthNestedStack(this, `${id}AuthStack`, {
+            appName: 'Crusade management',
+            adminEmail,
+            adminPassword,
+        });
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'CdkCrusadeQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
-  }
+
+        const httpApi = new HttpApi(this, `${id}HttpApi`);
+        authStack.registerAuthApiRoutes(httpApi);
+
+        new cdk.CfnOutput(this, 'apiUrl', {value: httpApi.url ?? 'no url'});
+    }
 }
