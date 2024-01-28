@@ -1,0 +1,49 @@
+name: Deploy and test staging
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  actions: write
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy and test staging
+    runs-on: ubuntu-22.04
+    if: |
+      github.event.pull_request.merged == false ||
+      contains(github.event.pull_request.labels.*.name, 'dependencies') == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Download dependencies
+        run: npm ci
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::296681679694:role/GitHubDeployCDKCrusade
+
+      - name: Deploy to staging
+        run: npm run deploy:staging
+
+      - name: Test staging
+        run: npm run test
