@@ -8,7 +8,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "deploy:staging": "cdk deploy --require-approval never --outputs-file cdk-outputs.json",
-    "destroy:staging": "cdk destroy --require-approval never",
+    "destroy:staging": "cdk destroy --force",
     "test": "jest --detectOpenHandles",
     "cdk": "cdk"
   },
